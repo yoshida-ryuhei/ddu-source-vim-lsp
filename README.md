@@ -18,6 +18,7 @@
 - [vim-lsp](https://github.com/prabirshrestha/vim-lsp)
 - [deno-udd](https://github.com/hayd/deno-udd) to update dependency of deno
   automatically.
+- [vim-themis](https://github.com/thinca/vim-themis) to test vim code
 
 ## TODO
 
