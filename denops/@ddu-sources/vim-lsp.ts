@@ -11,7 +11,7 @@ import { assert } from "https://deno.land/std@0.133.0/testing/asserts.ts";
 
 type Params = {
   method: string;
-  wait_max_ms?: number;
+  max_wait_ms?: number;
   wait_onetime_ms?: number;
   bufnr?: number;
 };
@@ -52,7 +52,7 @@ export class Source extends BaseSource<Params> {
         const gather_info = async () => {
           const items: Item<ActionData>[] = [];
           try {
-            const wait_max_ms = args.sourceParams.wait_max_ms || 1000;
+            const wait_max_ms = args.sourceParams.max_wait_ms || 1000;
             const wait_onetime_ms = args.sourceParams.wait_onetime_ms || 10;
 
             let res = null;
@@ -70,7 +70,7 @@ export class Source extends BaseSource<Params> {
               }
             }
             if (res === null) {
-              return;
+              return [];
             }
             const cwd = await fn.getcwd(args.denops) as string;
 
@@ -84,9 +84,7 @@ export class Source extends BaseSource<Params> {
         };
 
         const ddu_bufnr = await args.denops.call("bufnr");
-        //args.sourceParams.bufnr = null;
-        if (args.sourceParams.bufnr !== null) {
-          //if (false) {
+        if (args.sourceParams.bufnr !== undefined) {
           await args.denops.eval(
             `win_gotoid(bufwinid(${args.sourceParams.bufnr}))`,
           );
@@ -98,7 +96,7 @@ export class Source extends BaseSource<Params> {
         ) as Promise<boolean>;
         // The get_list is not succeeded because of no LSP server.
         if (await ret) {
-          if (args.sourceParams.bufnr !== null) {
+          if (args.sourceParams.bufnr !== undefined) {
             await args.denops.eval(`win_gotoid(bufwinid(${ddu_bufnr}))`);
           }
 
@@ -119,11 +117,11 @@ export class Source extends BaseSource<Params> {
       method: "references",
       max_wait_ms: 1000,
       wait_onetime_ms: 200,
-      bufnr: null,
+      bufnr: undefined,
     };
   }
 }
-function check_method(method_str: Any): Method {
+function check_method(method_str: string): Method {
   assert(
     (typeof method_str) == "string",
     `You should specify the param method as string, but ${typeof method_str}`,
@@ -141,7 +139,7 @@ function check_method(method_str: Any): Method {
   );
   return <Method> method_str;
 }
-function conv_text(text: str): str {
+function conv_text(text: string): string {
   let j = 0 as number;
   for (let i = 0; i < text.length; i++) {
     if (text[i] != " ") {
@@ -162,7 +160,7 @@ function get_item_from_info(info: Info, cwd: string): Item<ActionData> {
     action: {
       path: info.filename,
       lineNr: info.lnum,
-      number: info.col,
+      col: info.col,
       text: info.text,
     },
   };

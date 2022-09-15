@@ -8,6 +8,7 @@ lint/deno:
 	deno --version
 	deno fmt --check denops
 	deno lint --unstable denops
+	find -name \*.ts | xargs -I {} deno check {}
 
 format:
 	deno --version
