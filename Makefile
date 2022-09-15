@@ -15,3 +15,6 @@ lint/deno:
 format:
 	deno --version
 	deno fmt denops REAME.md
+
+update/deno:
+	deno run -A https://deno.land/x/udd/main.ts ${TS_TARGETS}
