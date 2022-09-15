@@ -1,3 +1,5 @@
+TS_TARGETS := $(shell find . -name \*.ts )
+
 lint: lint/vim lint/deno
 
 lint/vim:
@@ -8,7 +10,7 @@ lint/deno:
 	deno --version
 	deno fmt --check denops
 	deno lint --unstable denops
-	find -name \*.ts | xargs -I {} deno check {}
+	deno check ${TS_TARGETS}
 
 format:
 	deno --version
