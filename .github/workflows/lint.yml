@@ -1,0 +1,35 @@
+name: lint
+on:
+  push:
+
+permissions:
+  contents: read
+
+jobs:
+  deno-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v3
+
+      - name: Setup Deno
+        uses: denoland/setup-deno@v1
+        with:
+          deno-version: v1.x
+      - name: Verify formatting and lint the typescrip and markdown codes
+        run: make lint/deno
+
+  vim-lint:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Setup repo
+        uses: actions/checkout@v3
+
+      - uses: actions/setup-python@v2
+        name: Install Python
+        with:
+          python-version: '3.10'
+      - name: Install vint
+        run: pip install vim-vint
+      - name: Verify formatting and lint the vim code
+        run: make lint/vim
