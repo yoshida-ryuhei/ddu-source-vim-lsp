@@ -46,6 +46,7 @@ export class Source extends BaseSource<Params> {
   ): ReadableStream<Item<ActionData>[]> {
     this.counter = (this.counter + 1) % 100;
     const id = this.counter;
+    const jump_if_one = true as boolean;
     return new ReadableStream({
       async start(controller) {
         const method = check_method(args.sourceParams.method);
@@ -93,6 +94,7 @@ export class Source extends BaseSource<Params> {
           "ddu_source_vim_lsp#get_list",
           method,
           id,
+          jump_if_one,
         ) as Promise<boolean>;
         // The get_list is not succeeded because of no LSP server.
         if (await ret) {
@@ -101,9 +103,10 @@ export class Source extends BaseSource<Params> {
           }
 
           /** register functions to contoroller.*/
-          controller.enqueue(
-            await gather_info(),
-          );
+          const info = await gather_info();
+          if (info.length > 1 || (info.length == 1 && !jump_if_one)) {
+            controller.enqueue(info);
+          }
         } else {
           console.log("[ddu-source-vim-lsp] No candidate are found");
         }

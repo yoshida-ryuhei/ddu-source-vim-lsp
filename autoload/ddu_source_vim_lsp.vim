@@ -15,7 +15,7 @@ function! ddu_source_vim_lsp#debug_mode(...) abort
 	return s:is_debug_mode
 endfunction
 
-function! ddu_source_vim_lsp#get_list(method,id) abort
+function! ddu_source_vim_lsp#get_list(method, id, jump_if_one) abort
 	let l:operation = substitute(a:method, '\u', ' \l\0', 'g')
 	let l:capabilities_func = printf('lsp#capabilities#has_%s_provider(v:val)', substitute(l:operation, ' ', '_', 'g'))
     let l:servers = filter(lsp#get_allowed_servers(), l:capabilities_func)
@@ -24,9 +24,9 @@ function! ddu_source_vim_lsp#get_list(method,id) abort
 				\  'textDocument': lsp#get_text_document_identifier(),
 				\   'position': lsp#get_position(),
 				\ }
-	let l:ctx = { 'jump_if_one': v:false}
+	let l:ctx = { 'jump_if_one': a:jump_if_one}
 	let l:command_id = lsp#_new_command()
-	let l:ctx = extend({ 'counter': len(l:servers), 'list':[], 'last_command_id': l:command_id, 'jump_if_one': v:true, 'mods': '', 'in_preview': v:false }, l:ctx)
+	let l:ctx = extend({ 'counter': len(l:servers), 'list':[], 'last_command_id': l:command_id, 'mods': '', 'in_preview': v:false }, l:ctx)
 	if len(l:servers) == 0
 		return v:false
 	endif
@@ -52,6 +52,12 @@ function! s:handle_location(ctx, server, type, id, data) abort "ctx = {counter, 
 		call lsp#utils#error('Failed to retrieve '. a:type . ' for ' . a:server . ': ' . lsp#client#error_message(a:data['response']))
 	else
 		let a:ctx['list'] = a:ctx['list'] + lsp#utils#location#_lsp_to_vim_list(a:data['response']['result'])
+	endif
+	if len(a:ctx['list']) == 1 && a:ctx['jump_if_one']
+		"call lsp#utils#location#_open_vim_list_item(a:ctx['list'][0], a:ctx['mods'])
+		call lsp#utils#location#_open_vim_list_item(a:ctx['list'][0], '')
+		echo 'Retrieved ' . a:type
+		"redraw
 	endif
 	let s:results[a:id] = a:ctx['list']
 endfunction
