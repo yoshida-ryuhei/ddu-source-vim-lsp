@@ -155,8 +155,21 @@ function conv_text(text: string): string {
 function get_item_from_info(info: Info, cwd: string): Item<ActionData> {
   const text = conv_text(info.text);
   const relativepath = relative(cwd, info.filename) as string;
+  const place_info = `${info.lnum} col ${info.col}`;
+  const word = `${relativepath}| ${place_info} |${text}`;
   return {
-    word: `${relativepath}|${info.lnum} col ${info.col}|${text}`,
+    word: word,
+    highlights: [{
+      name: "path_info",
+      hl_group: "ErrorMsg",
+      col: 1,
+      width: relativepath.length,
+    }, {
+      name: "place_info",
+      hl_group: "Search",
+      col: relativepath.length + 2,
+      width: place_info.length + 2,
+    }],
     action: {
       path: info.filename,
       lineNr: info.lnum,
