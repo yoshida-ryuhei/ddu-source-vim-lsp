@@ -14,6 +14,8 @@ type Params = {
   max_wait_ms?: number;
   wait_onetime_ms?: number;
   bufnr?: number;
+  highlight_path?: string;
+  highlight_place?: string;
 };
 
 type Info = {
@@ -55,6 +57,9 @@ export class Source extends BaseSource<Params> {
           try {
             const wait_max_ms = args.sourceParams.max_wait_ms || 1000;
             const wait_onetime_ms = args.sourceParams.wait_onetime_ms || 10;
+            const highlight_path = args.sourceParams.highlight_path || "Normal";
+            const highlight_place = args.sourceParams.highlight_place ||
+              "Normal";
 
             let res = null;
             assert(wait_max_ms > wait_onetime_ms);
@@ -76,7 +81,9 @@ export class Source extends BaseSource<Params> {
             const cwd = await fn.getcwd(args.denops) as string;
 
             for (const info of res) {
-              items.push(get_item_from_info(info, cwd));
+              items.push(
+                get_item_from_info(info, cwd, highlight_path, highlight_place),
+              );
             }
           } catch (e: unknown) {
             console.error(e);
@@ -155,11 +162,29 @@ function conv_text(text: string): string {
   }
   return text.slice(j, text.length);
 }
-function get_item_from_info(info: Info, cwd: string): Item<ActionData> {
+function get_item_from_info(
+  info: Info,
+  cwd: string,
+  highlight_path: string,
+  highlight_place: string,
+): Item<ActionData> {
   const text = conv_text(info.text);
   const relativepath = relative(cwd, info.filename) as string;
+  const place_info = `${info.lnum} col ${info.col}`;
+  const word = `${relativepath}| ${place_info} |${text}`;
   return {
-    word: `${relativepath}|${info.lnum} col ${info.col}|${text}`,
+    word: word,
+    highlights: [{
+      name: "path_info",
+      hl_group: highlight_path,
+      col: 1,
+      width: relativepath.length,
+    }, {
+      name: "place_info",
+      hl_group: highlight_place,
+      col: relativepath.length + 2,
+      width: place_info.length + 2,
+    }],
     action: {
       path: info.filename,
       lineNr: info.lnum,
