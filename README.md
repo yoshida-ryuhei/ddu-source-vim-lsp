@@ -28,4 +28,4 @@
 - [ ] Add methods other than `reference`.
 - [ ] Write tests (if possible.)
 - [ ] Write dependabot.
-- [ ] Improve visivlity.
+- [x] Improve visivlity by supporting highlight.
