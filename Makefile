@@ -9,6 +9,7 @@ lint/vim:
 lint/deno:
 	deno --version
 	deno fmt --check denops
+	deno fmt --check README.md
 	deno lint --unstable denops
 	deno check ${TS_TARGETS}
 
