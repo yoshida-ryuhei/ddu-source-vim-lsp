@@ -1,3 +1,44 @@
 *ddu-source-vim-lsp.txt*	ddu.vim source by vim-lsp for ddu.vim
 
+Author: Ryuhei Yoshida <yoshida.ryuhei0112 at gmail.com>
+License: MIT license
+
+CONTENTS       *ddu-source-vim-lsp-contents*
+
+==============================================================================
+INTRODUCTION *ddu-source-vim-lsp-introduction*
+
+ddu-source-vim-lsp is a plugin to combine ddu.vim and vim-lsp, so that the
+suggested list can be shown on ddu.vim.
+
+==============================================================================
+INSTALL                      *ddu-source-vim-lsp-install*
+
+The following plugins and its depdenency are required to use this plugin.
+https://github.com/prabirshrestha/vim-lsp
+https://github.com/Shougo/ddu.vim
+https://github.com/Shougo/ddu-kind-file
+
+==============================================================================
+INTERFACE      *ddu-source-vim-lsp-interface*
+
+==============================================================================
+EXAMPLE *ddu-source-vim-lsp-example*
+
+The hilight can be specified like this. >
+	call ddu#custom#patch_global({
+	\   'sourceParams' : {
+	\     'vim-lsp' : {
+	\       'method': 'references',
+	\       'highlight_path': 'Directory',
+	\       'highlight_place': 'Label',
+	\     },
+	\   },
+	\ })
+<
+The references can be called like this. >
+	nnoremap gr <Cmd>Ddu vim-lsp -source-param-method='references' -source-param-bufnr=`bufnr()`<CR>
+<
+
+==============================================================================
  vim:tw=78:ts=8:noet:ft=help:norl:
