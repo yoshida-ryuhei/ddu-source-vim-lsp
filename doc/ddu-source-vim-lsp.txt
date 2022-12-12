@@ -5,6 +5,11 @@ License: MIT license
 
 CONTENTS       *ddu-source-vim-lsp-contents*
 
+Introduction *ddu-source-vim-lsp-introduction*
+Install      *ddu-source-vim-lsp-install*
+Interface    *ddu-source-vim-lsp-interface*
+Example      *ddu-source-vim-lsp-example*
+
 ==============================================================================
 INTRODUCTION *ddu-source-vim-lsp-introduction*
 
@@ -21,6 +26,33 @@ https://github.com/Shougo/ddu-kind-file
 
 ==============================================================================
 INTERFACE      *ddu-source-vim-lsp-interface*
+
+FUNCTION *ddu-source-vim-lsp-functions*
+
+			*ddu_source_vim_lsp#debug_mode()*
+ddu_source_vim_lsp#debug_mode([{is_debug_mode}])
+	Get and set the debug_mode.
+
+	If you specified {is_debug_mode} by bool such as v:true, v:false 0 then you can set debug mode for this plugin.
+	If you don`t specified the {is_debug_mode}, then you can get the
+	current debug mode of this plugin.
+
+	*ddu_source_vim_lsp#get_list()*
+ddu_source_vim_lsp#get_list(method, id) "-> bool
+	This function sends requests to get the information about {method} at
+	current cursol.
+	This function returns v:true (1) if the requests are send to LSP servers,
+	otherwise returns v:false (0).
+
+	{method} is the type of method in LSP.
+
+	{id} is the number of jobs to identify the information.
+
+	*ddu_source_vim_lsp#get_cached()*
+ddu_source_vim_lsp#get_cached(id)
+	This function gets the requested information.
+
+	{id} is the number of jobs to identify the information.
 
 ==============================================================================
 EXAMPLE *ddu-source-vim-lsp-example*
