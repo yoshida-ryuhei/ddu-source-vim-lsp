@@ -21,10 +21,10 @@
 
 ## TODO
 
-- [ ] Write documents.
+- [x] Write documents.
   - [ ] Write instruction of parameters in `vim-lsp.ts`.
-  - [ ] Write instruction of functions in `autoload/vim-souce-lsp.vim`.
-  - [ ] Write example.
+  - [x] Write instruction of functions in `autoload/vim-souce-lsp.vim`.
+  - [x] Write example.
 - [ ] Add methods other than `reference`.
 - [ ] Write tests (if possible.)
 - [ ] Write dependabot.
