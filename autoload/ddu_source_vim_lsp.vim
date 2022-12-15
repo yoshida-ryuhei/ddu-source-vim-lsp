@@ -15,7 +15,7 @@ function! ddu_source_vim_lsp#debug_mode(...) abort
 	return s:is_debug_mode
 endfunction
 
-function! ddu_source_vim_lsp#get_list(method,id) abort
+function! ddu_source_vim_lsp#get_list(method, id) abort
 	let l:operation = substitute(a:method, '\u', ' \l\0', 'g')
 	let l:capabilities_func = printf('lsp#capabilities#has_%s_provider(v:val)', substitute(l:operation, ' ', '_', 'g'))
     let l:servers = filter(lsp#get_allowed_servers(), l:capabilities_func)
