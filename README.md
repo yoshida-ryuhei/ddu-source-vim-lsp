@@ -22,7 +22,7 @@
 ## TODO
 
 - [x] Write documents.
-  - [ ] Write instruction of parameters in `vim-lsp.ts`.
+  - [x] Write instruction of parameters in `vim-lsp.ts`.
   - [x] Write instruction of functions in `autoload/vim-souce-lsp.vim`.
   - [x] Write example.
 - [ ] Add methods other than `reference`.

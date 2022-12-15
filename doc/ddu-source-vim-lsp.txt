@@ -27,6 +27,42 @@ https://github.com/Shougo/ddu-kind-file
 ==============================================================================
 INTERFACE      *ddu-source-vim-lsp-interface*
 
+------------------------------------------------------------------------------
+OPTIONS	 			*ddu-source-vim-lsp-options*
+
+		*ddu-source-vim-lsp-option-method*
+method
+	It is a string to specify which method of information should the lsp return.
+
+		*ddu-source-vim-lsp-option-max_wait_ms*
+max_wait_ms
+	It is a number to wait the information from LSP server at maximum.
+	The unit is milliseconds.
+	Default: 1000 (=1000ms).
+
+		*ddu-source-vim-lsp-option-wait_onetime_ms*
+wait_onetime_ms
+	It is a number to wait the information from LSP server at one time.
+	This plugin checks the cached information every `wait_onetime_ms`.
+	The unit is milliseconds.
+	Default: 10 (=10).
+
+		*ddu-source-vim-lsp-option-bufnr*
+bufnr
+	It is a number to specify bufnr to return.
+	Default: undefined
+
+		*ddu-source-vim-lsp-option-highlight_path*
+highlight_path
+	It is a string to specify highlight for the path.
+	Default: Normal
+
+		*ddu-source-vim-lsp-option-highlight_place*
+highlight_place
+	It is a string to specify highlight for the place of path (line,column number).
+	Default: Normal
+
+------------------------------------------------------------------------------
 FUNCTION *ddu-source-vim-lsp-functions*
 
 			*ddu_source_vim_lsp#debug_mode()*
