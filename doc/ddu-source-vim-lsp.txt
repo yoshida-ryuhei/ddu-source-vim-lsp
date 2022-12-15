@@ -5,10 +5,10 @@ License: MIT license
 
 CONTENTS       *ddu-source-vim-lsp-contents*
 
-Introduction *ddu-source-vim-lsp-introduction*
-Install      *ddu-source-vim-lsp-install*
-Interface    *ddu-source-vim-lsp-interface*
-Example      *ddu-source-vim-lsp-example*
+Introduction |ddu-source-vim-lsp-introduction|
+Install      |ddu-source-vim-lsp-install|
+Interface    |ddu-source-vim-lsp-interface|
+Example      |ddu-source-vim-lsp-example|
 
 ==============================================================================
 INTRODUCTION *ddu-source-vim-lsp-introduction*
