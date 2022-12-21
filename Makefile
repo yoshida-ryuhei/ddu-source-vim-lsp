@@ -16,7 +16,13 @@ lint/deno:
 test: test/deno
 
 test/deno:
-	deno test --allow-run ${TS_TARGETS}
+	deno test --allow-run ${TS_TARGETS} --coverage=cov_profile
+
+coverage: coverage/deno
+
+coverage/deno: test/deno
+	deno coverage --include=denops/ cov_profile --lcov --output=cov_profile.lcov
+	genhtml -o cov_profile/html cov_profile.lcov
 
 format:
 	deno --version
