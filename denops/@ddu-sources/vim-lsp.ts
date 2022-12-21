@@ -6,7 +6,7 @@ import {
 import { Denops, fn } from "https://deno.land/x/ddu_vim@v.1.13.0/deps.ts";
 import { ActionData } from "https://deno.land/x/ddu_kind_file@v0.3.2/file.ts";
 
-//import { relative } from "https://deno.land/std@0.167.0/path/mod.ts";
+import { relative } from "https://deno.land/std@0.167.0/path/mod.ts";
 import { assert } from "https://deno.land/std@0.167.0/testing/asserts.ts";
 import { assertEquals } from "https://deno.land/std@0.166.0/testing/asserts.ts";
 
@@ -85,9 +85,9 @@ export class Source extends BaseSource<Params> {
                 get_item_from_info(
                   info,
                   cwd,
-                  git_root,
                   highlight_path,
                   highlight_place,
+                  git_root,
                 ),
               );
             }
@@ -205,13 +205,20 @@ async function get_git_root(cwd: string): Promise<string> {
   });
   const output: Uint8Array = await p.output();
   p.close();
-  const git_root_list= (new TextDecoder().decode(output)).split( /\r\n|\n/);
-  assertEquals(git_root_list.length , 2);
+  const git_root_list = (new TextDecoder().decode(output)).split(/\r\n|\n/);
+  assertEquals(git_root_list.length, 2);
   return git_root_list[0];
 }
 function get_show_path(file_path: string, cwd: string, git_root: string) {
-  // TODO correct
-  return file_path + git_root + cwd;
+  if (is_child(git_root, file_path)) {
+    return relative(cwd, file_path) as string;
+  }
+  return file_path + git_root;
+}
+
+function is_child(parent_dir: string, child_path: string): boolean {
+  const parent_path = parent_dir.endsWith("/") ? parent_dir : `${parent_dir}/`;
+  return child_path.startsWith(parent_path);
 }
 //Deno.test("get_get_git_root",o
 Deno.test("url test", () => {
