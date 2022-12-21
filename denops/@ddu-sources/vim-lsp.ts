@@ -8,6 +8,7 @@ import { ActionData } from "https://deno.land/x/ddu_kind_file@v0.3.2/file.ts";
 
 import { relative } from "https://deno.land/std@0.167.0/path/mod.ts";
 import { assert } from "https://deno.land/std@0.167.0/testing/asserts.ts";
+import { assertEquals } from "https://deno.land/std@0.166.0/testing/asserts.ts";
 
 type Params = {
   method: string;
@@ -78,10 +79,16 @@ export class Source extends BaseSource<Params> {
               return [];
             }
             const cwd = await fn.getcwd(args.denops) as string;
-
+            const git_root = await get_git_root(cwd);
             for (const info of res) {
               items.push(
-                get_item_from_info(info, cwd, highlight_path, highlight_place),
+                get_item_from_info(
+                  info,
+                  cwd,
+                  highlight_path,
+                  highlight_place,
+                  git_root,
+                ),
               );
             }
           } catch (e: unknown) {
@@ -164,22 +171,23 @@ function get_item_from_info(
   cwd: string,
   highlight_path: string,
   highlight_place: string,
+  git_root: string,
 ): Item<ActionData> {
   const text = conv_text(info.text);
-  const relativepath = relative(cwd, info.filename) as string;
+  const path_str = get_show_path(info.filename, cwd, git_root);
   const place_info = `${info.lnum} col ${info.col}`;
-  const word = `${relativepath}| ${place_info} |${text}`;
+  const word = `${path_str}| ${place_info} |${text}`;
   return {
     word: word,
     highlights: [{
       name: "path_info",
       hl_group: highlight_path,
       col: 1,
-      width: relativepath.length,
+      width: path_str.length,
     }, {
       name: "place_info",
       hl_group: highlight_place,
-      col: relativepath.length + 2,
+      col: path_str.length + 2,
       width: place_info.length + 2,
     }],
     action: {
@@ -190,3 +198,36 @@ function get_item_from_info(
     },
   };
 }
+async function get_git_root(cwd: string): Promise<string> {
+  const p = Deno.run({
+    cmd: ["git", "-C", cwd, "rev-parse", "--show-toplevel"],
+    stdout: "piped",
+  });
+  const output: Uint8Array = await p.output();
+  p.close();
+  const git_root_list = (new TextDecoder().decode(output)).split(/\r\n|\n/);
+  assertEquals(git_root_list.length, 2);
+  return git_root_list[0];
+}
+function get_show_path(file_path: string, cwd: string, git_root: string) {
+  if (is_child(git_root, file_path)) {
+    return relative(cwd, file_path) as string;
+  }
+  return file_path + git_root;
+}
+
+function is_child(parent_dir: string, child_path: string): boolean {
+  const parent_path = parent_dir.endsWith("/") ? parent_dir : `${parent_dir}/`;
+  return child_path.startsWith(parent_path);
+}
+Deno.test("url test", () => {
+  const url = new URL("./foo.js", "https://deno.land/");
+  assertEquals(url.href, "https://deno.land/foo.js");
+});
+
+Deno.test("test_get_git_root", async () => {
+  const script_dir = new URL("../", import.meta.url).pathname;
+  const script_root = new URL("../../", import.meta.url).pathname;
+  const git_root = await get_git_root(script_dir);
+  assertEquals(script_root, `${git_root}/`);
+});
