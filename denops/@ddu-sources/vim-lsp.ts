@@ -220,7 +220,6 @@ function is_child(parent_dir: string, child_path: string): boolean {
   const parent_path = parent_dir.endsWith("/") ? parent_dir : `${parent_dir}/`;
   return child_path.startsWith(parent_path);
 }
-//Deno.test("get_get_git_root",o
 Deno.test("url test", () => {
   const url = new URL("./foo.js", "https://deno.land/");
   assertEquals(url.href, "https://deno.land/foo.js");
