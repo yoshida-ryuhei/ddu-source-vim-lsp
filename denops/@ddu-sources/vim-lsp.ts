@@ -198,13 +198,13 @@ function get_item_from_info(
     },
   };
 }
-async function get_git_root(cwd: string): Promise<string> {
-  const p = Deno.run({
-    cmd: ["git", "-C", cwd, "rev-parse", "--show-toplevel"],
+function get_git_root(cwd: string): string {
+  const command = new Deno.Command("git", {
+    args: ["-C", cwd, "rev-parse", "--show-toplevel"],
     stdout: "piped",
   });
-  const output: Uint8Array = await p.output();
-  p.close();
+  const status = command.outputSync();
+  const output: Uint8Array = status.stdout;
   const git_root_list = (new TextDecoder().decode(output)).split(/\r\n|\n/);
   assertEquals(git_root_list.length, 2);
   return git_root_list[0];
@@ -225,9 +225,9 @@ Deno.test("url test", () => {
   assertEquals(url.href, "https://deno.land/foo.js");
 });
 
-Deno.test("test_get_git_root", async () => {
+Deno.test("test_get_git_root", () => {
   const script_dir = new URL("../", import.meta.url).pathname;
   const script_root = new URL("../../", import.meta.url).pathname;
-  const git_root = await get_git_root(script_dir);
+  const git_root = get_git_root(script_dir);
   assertEquals(script_root, `${git_root}/`);
 });
