@@ -4,13 +4,13 @@ import {
   SourceOptions,
 } from "https://deno.land/x/ddu_vim@v.1.13.0/types.ts";
 import { Denops, fn } from "https://deno.land/x/ddu_vim@v.1.13.0/deps.ts";
-import { ActionData } from "https://deno.land/x/ddu_kind_file@v0.5.3/file.ts";
+import { ActionData } from "https://deno.land/x/ddu_kind_file@v0.7.1/file.ts";
 
-import { relative } from "https://deno.land/std@0.198.0/path/mod.ts";
+import { relative } from "https://deno.land/std@0.220.1/path/mod.ts";
 import {
   assert,
   assertEquals,
-} from "https://deno.land/std@0.198.0/assert/mod.ts";
+} from "https://deno.land/std@0.220.1/assert/mod.ts";
 
 type Params = {
   method: string;
